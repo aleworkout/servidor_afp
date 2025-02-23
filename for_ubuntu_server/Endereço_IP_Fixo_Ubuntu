@@ -1,0 +1,79 @@
+#Configurar um Endereço IP Fixo no Ubuntu
+
+1. Identifique sua interface de rede
+
+Abra um terminal e digite o seguinte comando para listar as interfaces de rede disponíveis:
+Bash
+
+ip a
+
+Procure pela sua interface de rede. Geralmente, as interfaces Ethernet são nomeadas como eth0 ou enp0s3, enquanto as interfaces Wi-Fi são nomeadas como wlan0 ou wlp2s0.
+
+2. Edite o arquivo de configuração da interface
+
+Abra o arquivo de configuração da sua interface de rede com um editor de texto. Você precisará de privilégios de administrador para fazer isso.
+Bash
+
+sudo nano /etc/netplan/01-netcfg.yaml
+
+3. Configure o endereço IP estático
+
+Dentro do arquivo 01-netcfg.yaml, você verá uma configuração semelhante a esta:
+YAML
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3: {} # Substitua enp0s3 pelo nome da sua interface
+
+Substitua o conteúdo do arquivo por algo como:
+YAML
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3: # Substitua enp0s3 pelo nome da sua interface
+      dhcp4: no
+      addresses: [192.168.1.10/24] # Substitua pelo seu endereço IP, máscara de rede e gateway
+      gateway4: 192.168.1.1 # Substitua pelo endereço do seu gateway (roteador)
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4] # Substitua pelos servidores DNS de sua preferência
+
+Explicação:
+
+    dhcp4: no: Desabilita o DHCP para esta interface.
+    addresses: Define o endereço IP estático, a máscara de rede e o gateway.
+    gateway4: Define o endereço do gateway (roteador).
+    nameservers: Define os servidores DNS.
+
+Importante:
+    
+    Para dar uma ideia dos vizinhos da rede: ip neigh
+
+    Substitua os valores acima pelos seus próprios valores.
+    Certifique-se de que o endereço IP estático esteja na mesma sub-rede do seu roteador, mas fora do intervalo de DHCP.
+    O gateway geralmente é o endereço IP do seu roteador.
+    Você pode usar servidores DNS públicos como os do Google (8.8.8.8 e 8.8.4.4) ou os do Cloudflare (1.1.1.1 e 1.0.0.1).
+
+4. Salve o arquivo e aplique as alterações
+
+Salve o arquivo 01-netcfg.yaml e execute o seguinte comando para aplicar as alterações:
+Bash
+
+sudo netplan apply
+
+5. Verifique a conexão
+
+Verifique se a conexão está funcionando corretamente e se o endereço IP estático foi atribuído.
+Bash
+
+ip a
+
+Observações:
+
+    Se você estiver usando uma conexão Wi-Fi, as etapas são semelhantes, mas você precisará editar o arquivo de configuração da sua interface Wi-Fi.
+    Se você tiver alguma dúvida ou precisar de ajuda adicional, consulte a documentação do Ubuntu ou procure por tutoriais online.
+
+Espero que isso ajude você a configurar um endereço IP fixo em seu Ubuntu!
