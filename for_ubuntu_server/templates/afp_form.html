@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generar Certificado AFP</title>
+    <style>
+        .container { max-width: 600px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        input[type="text"] { width: 250px; padding: 8px; }
+        button { background: #2196F3; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de Certificados AFP</h1>
+        <form method="POST" action="/generate">
+            <div class="form-group">
+                <!-- <label>RUT del Cliente:</label><br> -->
+                <small style="color: #666;">Ingrese RUT sin puntos ni guión (ej: 12345678K)</small>
+                <input type="text" name="rut" placeholder="12345678-K" required>
+            </div>
+            <button type="submit">Generar Certificado</button>
+        </form>
+    </div>
+    
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const rutInput = document.querySelector('input[name="rut"]');
+    
+    rutInput.addEventListener('input', function(e) {
+        // Salvar posição do cursor
+        const caretPos = e.target.selectionStart;
+        const originalLength = e.target.value.length;
+        
+        // Obter e limpar o valor
+        let value = e.target.value.replace(/[^0-9kK]/g, '').toUpperCase();
+        value = value.substring(0, 9); // Limitar a 9 caracteres
+        
+        // Separar corpo e dígito verificador
+        let body = value.slice(0, -1).replace(/\D/g, '');
+        const dv = value.slice(-1).replace(/[^0-9K]/g, '');
+        
+        // Formatar corpo com pontos
+        if(body.length > 1) {
+            body = body.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+        }
+        
+        // Combinar partes
+        let formatted = body;
+        if(dv) {
+            formatted += (body ? '-' : '') + dv;
+        }
+        
+        // Atualizar valor
+        e.target.value = formatted;
+        
+        // Ajustar posição do cursor
+        const newCaretPos = caretPos + (formatted.length - originalLength);
+        e.target.setSelectionRange(newCaretPos, newCaretPos);
+    });
+});
+</script>
+    
+</body>
+</html>
