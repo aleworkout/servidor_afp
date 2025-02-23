@@ -1,8 +1,6 @@
 # Dicas Importantes:
 
     Firewall: Libere a porta 5000 no servidor:
-    bash
-    Copy
 
     sudo ufw allow 5000
 
