@@ -1,0 +1,47 @@
+Cenário 1: Tudo em um Único PC (Ubuntu) com Pasta Compartilhada
+
+Como Funciona:
+
+    O mesmo computador roda o servidor Flask e é conectado diretamente ao tótem (TV touch).
+
+    A pasta uploads é compartilhada na rede via Samba/NFS.
+
+    O tótem acessa a interface web via navegador local (http://localhost:5000) e os arquivos via rede.
+
+Vantagens:
+
+    Simplicidade: Sem comunicação externa (tudo local).
+
+    Velocidade: Processamento rápido, sem latência de rede.
+
+    Controle Total: Fácil depuração e monitoramento.
+
+Passos para Implementar:
+
+    Configure o compartilhamento da pasta uploads no Ubuntu:
+    bash
+    Copy
+
+    sudo apt install samba
+    sudo nano /etc/samba/smb.conf
+
+    Adicione ao final do arquivo:
+    ini
+    Copy
+
+    [uploads]
+    path = /caminho/do/seu/projeto/uploads
+    writable = yes
+    guest ok = yes
+
+    Reinicie o Samba:
+    bash
+    Copy
+
+    sudo service smbd restart
+
+    No Windows (tótem):
+
+        Acesse \\IP_DO_SERVIDOR\uploads no Explorer para ver os certificados.
+
+        Mantenha o navegador aberto em http://localhost:5000.
